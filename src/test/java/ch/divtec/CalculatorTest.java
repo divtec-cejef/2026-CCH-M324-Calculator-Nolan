@@ -33,42 +33,42 @@ class CalculatorTest {
     @Test
     void subtract() {
         Calculator calculator = new Calculator();
-        int result = calculator.subtract(1, 2);
-        assertEquals(0, result);
+        int result = calculator.subtract(2, 1);
+        assertEquals(1, result);
     }
     @Test
     void subtractNegative() {
         Calculator calculator = new Calculator();
         int result = calculator.subtract(-1, 2);
-        assertEquals(0, result);
+        assertEquals(-3, result);
     }
 
     @Test
     void subtractZero() {
         Calculator calculator = new Calculator();
-        int result = calculator.subtract(0, 2);
-        assertEquals(0, result);
+        int result = calculator.subtract(2, 0);
+        assertEquals(2, result);
     }
 
     @Test
     void subtractMax() {
         Calculator calculator = new Calculator();
         int result = calculator.subtract(100000, 50000);
-        assertEquals(0, result);
+        assertEquals(50000, result);
     }
 
     @Test
     void multiply() {
         Calculator calculator = new Calculator();
         int result = calculator.multiply(1, 2);
-        assertEquals(0, result);
+        assertEquals(2, result);
     }
 
     @Test
     void multiplyNegative() {
         Calculator calculator = new Calculator();
         int result = calculator.multiply(-1, 2);
-        assertEquals(0, result);
+        assertEquals(-2, result);
     }
 
     @Test
@@ -81,8 +81,8 @@ class CalculatorTest {
     @Test
     void multiplyMax() {
         Calculator calculator = new Calculator();
-        int result = calculator.multiply(100000, 50000);
-        assertEquals(0, result);
+        int result = calculator.multiply(100, 500);
+        assertEquals(50000, result);
     }
 
     @Test
@@ -110,6 +110,6 @@ class CalculatorTest {
     void divideMax() {
         Calculator calculator = new Calculator();
         int result = calculator.divide(100000, 50000);
-        assertEquals(0, result);
+        assertEquals(2, result);
     }
 }
