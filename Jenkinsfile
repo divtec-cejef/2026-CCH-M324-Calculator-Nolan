@@ -40,7 +40,14 @@ pipeline {
 
         stage('Coverage') {
             steps {
-                jacoco execPattern: 'target/jacoco.exec'
+                echo "📊 Collecting coverage (JaCoCo + Coverage plugin)"
+
+                recordCoverage tools: [
+                    jacoco(
+                        id: 'jacoco',
+                        reportFile: 'target/site/jacoco/jacoco.xml'
+                    )
+                ]
             }
         }
 
@@ -54,6 +61,8 @@ pipeline {
 
     post {
         always {
+            echo "📊 Publishing results"
+
             junit 'target/surefire-reports/*.xml'
 
             archiveArtifacts artifacts: 'target/**/*.jar', allowEmptyArchive: true
