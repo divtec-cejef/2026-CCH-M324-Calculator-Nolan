@@ -24,14 +24,8 @@ pipeline {
                 echo "=============================="
 
                 sh '''
-                    echo "📌 Java version"
                     java -version
-
-                    echo "📌 Maven version"
                     mvn -version
-
-                    echo "📌 Environment"
-                    env | sort
                 '''
             }
         }
@@ -41,48 +35,44 @@ pipeline {
                 echo "📥 Checkout source code"
                 checkout scm
 
-                sh '''
-                    echo "📂 Listing repository files"
-                    ls -la
-                '''
+                sh 'ls -la'
             }
         }
 
         stage('Clean') {
             steps {
-                echo "🧹 Maven clean start (debug mode)"
-                sh 'mvn clean -X -e | tee clean.log'
+                echo "🧹 Maven clean"
+                sh 'mvn clean'
             }
         }
 
         stage('Compile') {
             steps {
-                echo "⚙️ Compilation du projet"
-                sh 'mvn compile -X -e | tee compile.log'
+                echo "⚙️ Compilation"
+                sh 'mvn compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo "🧪 Lancement des tests unitaires"
+                echo "🧪 Tests unitaires"
+
+                sh 'mvn test'
 
                 sh '''
-                    mvn test -X -e | tee test.log
-                    echo "📊 Résultats tests"
-                    find target -name "surefire-reports" -type d || true
+                    echo "📊 Surefire reports"
+                    find target -name "surefire-reports" || true
+                    ls -R target/surefire-reports || true
                 '''
             }
         }
 
         stage('Package') {
             steps {
-                echo "📦 Packaging application (skip tests)"
-                sh 'mvn package -DskipTests -X -e | tee package.log'
+                echo "📦 Packaging"
+                sh 'mvn package -DskipTests'
 
-                sh '''
-                    echo "📦 JAR généré :"
-                    ls -lh target/*.jar || true
-                '''
+                sh 'ls -lh target/*.jar || true'
             }
         }
     }
@@ -95,13 +85,13 @@ pipeline {
             echo "Status: ${currentBuild.currentResult}"
             echo "=============================="
 
+            // 🔥 IMPORTANT : affichage tests dans Jenkins
+            junit 'target/surefire-reports/*.xml'
+
+            // sauvegarde logs + rapports
+            archiveArtifacts artifacts: 'target/surefire-reports/**', allowEmptyArchive: true
             archiveArtifacts artifacts: '*.log', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-
-            sh '''
-                echo "📂 Final workspace state"
-                ls -R | head -200
-            '''
         }
 
         success {
@@ -109,7 +99,7 @@ pipeline {
         }
 
         failure {
-            echo "❌ BUILD FAILED - check logs"
+            echo "❌ BUILD FAILED"
         }
     }
 }
