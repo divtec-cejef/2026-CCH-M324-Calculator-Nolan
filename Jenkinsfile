@@ -6,12 +6,6 @@ pipeline {
         jdk 'OpenJDK 21.0.10'
     }
 
-    options {
-        timestamps()        // 🕒 horodatage logs
-        ansiColor('xterm')  // 🎨 logs lisibles
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-    }
-
     environment {
         MAVEN_OPTS = "-Xms256m -Xmx1024m"
     }
