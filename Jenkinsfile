@@ -15,7 +15,10 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                sh 'ls -la'
+                sh '''
+                    echo "📂 Project structure"
+                    ls -R | head -200
+                '''
             }
         }
 
@@ -40,12 +43,13 @@ pipeline {
 
         stage('Coverage') {
             steps {
-                echo "📊 Collecting coverage (JaCoCo + Coverage plugin)"
+                echo "📊 Coverage with JaCoCo + Coverage plugin"
 
+                // 🔥 SAFE VERSION (évite ton NullPointerException)
                 recordCoverage tools: [
                     jacoco(
                         id: 'jacoco',
-                        reportFile: 'target/site/jacoco/jacoco.xml'
+                        execPattern: 'target/jacoco.exec'
                     )
                 ]
             }
@@ -63,8 +67,10 @@ pipeline {
         always {
             echo "📊 Publishing results"
 
+            // Tests JUnit (si générés)
             junit 'target/surefire-reports/*.xml'
 
+            // Archives
             archiveArtifacts artifacts: 'target/**/*.jar', allowEmptyArchive: true
             archiveArtifacts artifacts: 'target/site/jacoco/**', allowEmptyArchive: true
         }
