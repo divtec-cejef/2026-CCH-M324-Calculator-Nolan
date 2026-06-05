@@ -13,7 +13,7 @@
         <maven.compiler.target>22</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.projectKey>ch.divtec:simple-calculator-Nolan</sonar.projectKey>
-        <sonar.projectName>simple-calculator</sonar.projectName>
+        <sonar.projectName>Calculator - Nolan</sonar.projectName>
     </properties>
 
     <dependencies>
